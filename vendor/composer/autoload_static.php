@@ -46,6 +46,7 @@ class ComposerStaticInit5f67e7591ed13273f927fb2bef139298
             'Symfony\\Component\\Security\\Core\\' => 32,
             'Symfony\\Component\\Routing\\' => 26,
             'Symfony\\Component\\PropertyAccess\\' => 33,
+            'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\OptionsResolver\\' => 34,
             'Symfony\\Component\\Mime\\' => 23,
             'Symfony\\Component\\Intl\\' => 23,
@@ -63,6 +64,7 @@ class ComposerStaticInit5f67e7591ed13273f927fb2bef139298
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Config\\' => 25,
             'Symfony\\Component\\Cache\\' => 24,
+            'Symfony\\Bundle\\WebServerBundle\\' => 31,
             'Symfony\\Bundle\\TwigBundle\\' => 26,
             'Symfony\\Bundle\\MakerBundle\\' => 27,
             'Symfony\\Bundle\\FrameworkBundle\\' => 31,
@@ -190,6 +192,10 @@ class ComposerStaticInit5f67e7591ed13273f927fb2bef139298
         array (
             0 => __DIR__ . '/..' . '/symfony/property-access',
         ),
+        'Symfony\\Component\\Process\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/process',
+        ),
         'Symfony\\Component\\OptionsResolver\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/options-resolver',
@@ -257,6 +263,10 @@ class ComposerStaticInit5f67e7591ed13273f927fb2bef139298
         'Symfony\\Component\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/cache',
+        ),
+        'Symfony\\Bundle\\WebServerBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/web-server-bundle',
         ),
         'Symfony\\Bundle\\TwigBundle\\' => 
         array (

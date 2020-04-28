@@ -8,12 +8,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/utilisateur")
  */
 class UtilisateurController extends AbstractController
 {
+
     /**
      * @Route("/", name="utilisateur_index", methods={"GET"})
      */
@@ -23,9 +25,11 @@ class UtilisateurController extends AbstractController
             ->getRepository(Utilisateur::class)
             ->findAll();
 
-        return $this->render('utilisateur/index.html.twig', [
-            'utilisateurs' => $utilisateurs,
-        ]);
+        return $this->json($utilisateurs);
+
+        /*return new JsonResponse(
+            $utilisateurs, JsonResponse::HTTP_OK
+        );*/
     }
 
     /**
@@ -56,9 +60,8 @@ class UtilisateurController extends AbstractController
      */
     public function show(Utilisateur $utilisateur): Response
     {
-        return $this->render('utilisateur/show.html.twig', [
-            'utilisateur' => $utilisateur,
-        ]);
+        return $this->json($utilisateur);
+
     }
 
     /**
@@ -90,8 +93,8 @@ class UtilisateurController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($utilisateur);
             $entityManager->flush();
+            return $this->json(true);
         }
-
-        return $this->redirectToRoute('utilisateur_index');
+        return $this->json(false);
     }
 }
