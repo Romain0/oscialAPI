@@ -5,38 +5,70 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Etudiant
- *
- * @ORM\Table(name="etudiant")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\EtudiantRepository")
  */
 class Etudiant
 {
     /**
-     * @var string
-     *
-     * @ORM\Column(name="etudiant_niveau_etudes", type="string", length=255, nullable=false)
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
-    private $etudiantNiveauEtudes;
+    private $id;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="etudiant_entreprise", type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $etudiantEntreprise;
+    private $niveau_etudes;
 
     /**
-     * @var \Utilisateur
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Utilisateur")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_utilisateur", referencedColumnName="ID_utilisateur")
-     * })
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $idUtilisateur;
+    private $entreprise;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Utilisateur", cascade={"persist", "remove"})
+     */
+    private $utilisateur;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getNiveauEtudes(): ?string
+    {
+        return $this->niveau_etudes;
+    }
+
+    public function setNiveauEtudes(string $niveau_etudes): self
+    {
+        $this->niveau_etudes = $niveau_etudes;
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?string
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?string $entreprise): self
+    {
+        $this->entreprise = $entreprise;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
 }

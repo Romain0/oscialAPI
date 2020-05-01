@@ -3,98 +3,106 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
-use App\Form\Utilisateur1Type;
+use App\Repository\UtilisateurRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/utilisateur")
  */
 class UtilisateurController extends AbstractController
 {
-
     /**
-     * @Route("/", name="utilisateur_index", methods={"GET"})
+     * @Route("/", name="index_utilisateur")
      */
-    public function index(): Response
+    public function index (UtilisateurRepository $utilisateurRepository)
     {
-        $utilisateurs = $this->getDoctrine()
-            ->getRepository(Utilisateur::class)
-            ->findAll();
 
-        return $this->json($utilisateurs);
+        $utilisateurs = $utilisateurRepository->findAll();
 
-        /*return new JsonResponse(
-            $utilisateurs, JsonResponse::HTTP_OK
-        );*/
-    }
+        $encoders = [new JsonEncoder()];
 
-    /**
-     * @Route("/new", name="utilisateur_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $utilisateur = new Utilisateur();
-        $form = $this->createForm(Utilisateur1Type::class, $utilisateur);
-        $form->handleRequest($request);
+        $normalizers = [new ObjectNormalizer()];
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($utilisateur);
-            $entityManager->flush();
+        $serializer = new Serializer($normalizers, $encoders);
 
-            return $this->redirectToRoute('utilisateur_index');
-        }
-
-        return $this->render('utilisateur/new.html.twig', [
-            'utilisateur' => $utilisateur,
-            'form' => $form->createView(),
+        $jsonContent = $serializer->serialize($utilisateurs, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
         ]);
+
+        $response = new Response($jsonContent);
+
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**
-     * @Route("/{idUtilisateur}", name="utilisateur_show", methods={"GET"})
+     * @Route("/{id}", name="utilisateur_show", methods={"GET"})
      */
-    public function show(Utilisateur $utilisateur): Response
+    public function show (Request $request, UtilisateurRepository $utilisateurRepository)
     {
-        return $this->json($utilisateur);
+        $id = $request->get('id');
+        $utilisateur = $utilisateurRepository->find($id);
 
+        $encoders = [new JsonEncoder()];
+
+        $normalizers = [new ObjectNormalizer()];
+
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $jsonContent = $serializer->serialize($utilisateur, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
+        ]);
+
+        $response = new Response($jsonContent);
+
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**
-     * @Route("/{idUtilisateur}/edit", name="utilisateur_edit", methods={"GET","POST"})
+     * @Route("/new", name="utilisateur_new", methods={"GET"})
      */
-    public function edit(Request $request, Utilisateur $utilisateur): Response
+    public function new (Request $request)
     {
-        $form = $this->createForm(Utilisateur1Type::class, $utilisateur);
-        $form->handleRequest($request);
+        $utilisateur = new Utilisateur;
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        try {
+            $utilisateur->setNom($request->get('nom'));
+            $utilisateur->setPrenom($request->get('prenom'));
+            $utilisateur->setDateNaissance($request->get('dateNaissance'));
+            $utilisateur->setAdresse($request->get('adresse'));
+            $utilisateur->setComplementAdresse($request->get('complementAdresse'));
+            $utilisateur->setCodePostal($request->get('codePostal'));
+            $utilisateur->setVille($request->get('ville'));
+            $utilisateur->setSexe($request->get('sexe'));
+            $utilisateur->setLoisir($request->get('loisirs'));
+            $utilisateur->setTelephone($request->get('telephone'));
+            $utilisateur->setimgProfile($request->get('imgProfile'));
+            $utilisateur->setPossedePermis($request->get('possedePermis'));
+            $utilisateur->setPossedeVehicule($request->get('possedeVehicule'));
+            $utilisateur->setEtudiers($request->get('etudiers'));
+            $utilisateur->setEnvoyer($request->get('envoyer'));
+
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('utilisateur_index');
+        } catch (\Throwable $th) {
+            return json_encode($th);
         }
+            return http_response_code(201);
 
-        return $this->render('utilisateur/edit.html.twig', [
-            'utilisateur' => $utilisateur,
-            'form' => $form->createView(),
-        ]);
-    }
 
-    /**
-     * @Route("/{idUtilisateur}", name="utilisateur_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Utilisateur $utilisateur): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$utilisateur->getIdUtilisateur(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($utilisateur);
-            $entityManager->flush();
-            return $this->json(true);
-        }
-        return $this->json(false);
+
     }
 }

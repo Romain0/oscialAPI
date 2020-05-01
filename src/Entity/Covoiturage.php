@@ -5,108 +5,223 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Covoiturage
- *
- * @ORM\Table(name="covoiturage", indexes={@ORM\Index(name="fk_covoit_id_tchat_id_tchat", columns={"ID_tchat"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\CovoiturageRepository")
  */
 class Covoiturage
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="ID_covoit", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
-    private $idCovoit;
+    private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="covoit_vehicule", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $covoitVehicule;
+    private $vehicule;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="covoit_date_depart", type="datetime", nullable=false)
+     * @ORM\Column(type="date")
      */
-    private $covoitDateDepart;
+    private $date_depart;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="covoit_date_arrive", type="datetime", nullable=false)
+     * @ORM\Column(type="date")
      */
-    private $covoitDateArrive;
+    private $date_arrivee;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="covoit_adresse_depart", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $covoitAdresseDepart;
+    private $adresse_depart;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="covoit_adresse_complementaire_depart", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $covoitAdresseComplementaireDepart;
+    private $complement_adresse_depart;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="covoit_code_postal_depart", type="integer", nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $covoitCodePostalDepart;
+    private $cp_adresse_depart;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="covoit_ville_depart", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $covoitVilleDepart;
+    private $ville_adresse_depart;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="covoit_adresse_arrivee", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $covoitAdresseArrivee;
+    private $adresse_arrivee;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="covoit_adresse_complementaire_arrivee", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $covoitAdresseComplementaireArrivee;
+    private $complement_adresse_arrivee;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="covoit_code_postal_arrivee", type="integer", nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $covoitCodePostalArrivee;
+    private $cp_adresse_arrivee;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="covoit_ville_arrivee", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $covoitVilleArrivee;
+    private $ville_adresse_arrivee;
 
     /**
-     * @var \Tchat
-     *
-     * @ORM\ManyToOne(targetEntity="Tchat")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_tchat", referencedColumnName="ID_tchat")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tchat", inversedBy="covoiturages")
      */
-    private $idTchat;
+    private $tchat;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
+    public function getVehicule(): ?string
+    {
+        return $this->vehicule;
+    }
+
+    public function setVehicule(string $vehicule): self
+    {
+        $this->vehicule = $vehicule;
+
+        return $this;
+    }
+
+    public function getDateDepart(): ?\DateTimeInterface
+    {
+        return $this->date_depart;
+    }
+
+    public function setDateDepart(\DateTimeInterface $date_depart): self
+    {
+        $this->date_depart = $date_depart;
+
+        return $this;
+    }
+
+    public function getDateArrivee(): ?\DateTimeInterface
+    {
+        return $this->date_arrivee;
+    }
+
+    public function setDateArrivee(\DateTimeInterface $date_arrivee): self
+    {
+        $this->date_arrivee = $date_arrivee;
+
+        return $this;
+    }
+
+    public function getAdresseDepart(): ?string
+    {
+        return $this->adresse_depart;
+    }
+
+    public function setAdresseDepart(string $adresse_depart): self
+    {
+        $this->adresse_depart = $adresse_depart;
+
+        return $this;
+    }
+
+    public function getComplementAdresseDepart(): ?string
+    {
+        return $this->complement_adresse_depart;
+    }
+
+    public function setComplementAdresseDepart(string $complement_adresse_depart): self
+    {
+        $this->complement_adresse_depart = $complement_adresse_depart;
+
+        return $this;
+    }
+
+    public function getCpAdresseDepart(): ?string
+    {
+        return $this->cp_adresse_depart;
+    }
+
+    public function setCpAdresseDepart(string $cp_adresse_depart): self
+    {
+        $this->cp_adresse_depart = $cp_adresse_depart;
+
+        return $this;
+    }
+
+    public function getVilleAdresseDepart(): ?string
+    {
+        return $this->ville_adresse_depart;
+    }
+
+    public function setVilleAdresseDepart(string $ville_adresse_depart): self
+    {
+        $this->ville_adresse_depart = $ville_adresse_depart;
+
+        return $this;
+    }
+
+    public function getAdresseArrivee(): ?string
+    {
+        return $this->adresse_arrivee;
+    }
+
+    public function setAdresseArrivee(string $adresse_arrivee): self
+    {
+        $this->adresse_arrivee = $adresse_arrivee;
+
+        return $this;
+    }
+
+    public function getComplementAdresseArrivee(): ?string
+    {
+        return $this->complement_adresse_arrivee;
+    }
+
+    public function setComplementAdresseArrivee(string $complement_adresse_arrivee): self
+    {
+        $this->complement_adresse_arrivee = $complement_adresse_arrivee;
+
+        return $this;
+    }
+
+    public function getCpAdresseArrivee(): ?string
+    {
+        return $this->cp_adresse_arrivee;
+    }
+
+    public function setCpAdresseArrivee(string $cp_adresse_arrivee): self
+    {
+        $this->cp_adresse_arrivee = $cp_adresse_arrivee;
+
+        return $this;
+    }
+
+    public function getVilleAdresseArrivee(): ?string
+    {
+        return $this->ville_adresse_arrivee;
+    }
+
+    public function setVilleAdresseArrivee(string $ville_adresse_arrivee): self
+    {
+        $this->ville_adresse_arrivee = $ville_adresse_arrivee;
+
+        return $this;
+    }
+
+    public function getTchat(): ?Tchat
+    {
+        return $this->tchat;
+    }
+
+    public function setTchat(?Tchat $tchat): self
+    {
+        $this->tchat = $tchat;
+
+        return $this;
+    }
 }

@@ -5,38 +5,70 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Salarie
- *
- * @ORM\Table(name="salarie")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\SalarieRepository")
  */
 class Salarie
 {
     /**
-     * @var string
-     *
-     * @ORM\Column(name="salarie_entreprise", type="string", length=255, nullable=false)
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
-    private $salarieEntreprise;
+    private $id;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="salarie_anciennete", type="string", length=255, nullable=true)
+     * @ORM\OneToOne(targetEntity="App\Entity\Utilisateur", cascade={"persist", "remove"})
      */
-    private $salarieAnciennete;
+    private $utilisitateur;
 
     /**
-     * @var \Utilisateur
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Utilisateur")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_utilisateur", referencedColumnName="ID_utilisateur")
-     * })
+     * @ORM\Column(type="string", length=255)
      */
-    private $idUtilisateur;
+    private $entreprise;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $anciennete;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUtilisitateur(): ?Utilisateur
+    {
+        return $this->utilisitateur;
+    }
+
+    public function setUtilisitateur(?Utilisateur $utilisitateur): self
+    {
+        $this->utilisitateur = $utilisitateur;
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?string
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(string $entreprise): self
+    {
+        $this->entreprise = $entreprise;
+
+        return $this;
+    }
+
+    public function getAnciennete(): ?string
+    {
+        return $this->anciennete;
+    }
+
+    public function setAnciennete(string $anciennete): self
+    {
+        $this->anciennete = $anciennete;
+
+        return $this;
+    }
 }

@@ -5,38 +5,70 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Formateur
- *
- * @ORM\Table(name="formateur")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\FormateurRepository")
  */
 class Formateur
 {
     /**
-     * @var string
-     *
-     * @ORM\Column(name="formateur_matiere", type="string", length=255, nullable=false)
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
-    private $formateurMatiere;
+    private $id;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="formateur_anciennete", type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $formateurAnciennete;
+    private $matiere;
 
     /**
-     * @var \Utilisateur
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Utilisateur")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_utilisateur", referencedColumnName="ID_utilisateur")
-     * })
+     * @ORM\Column(type="integer")
      */
-    private $idUtilisateur;
+    private $anciennete;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Utilisateur", cascade={"persist", "remove"})
+     */
+    private $utilisateur;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getMatiere(): ?string
+    {
+        return $this->matiere;
+    }
+
+    public function setMatiere(string $matiere): self
+    {
+        $this->matiere = $matiere;
+
+        return $this;
+    }
+
+    public function getAnciennete(): ?int
+    {
+        return $this->anciennete;
+    }
+
+    public function setAnciennete(int $anciennete): self
+    {
+        $this->anciennete = $anciennete;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
 }

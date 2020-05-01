@@ -2,62 +2,116 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Message
- *
- * @ORM\Table(name="message", indexes={@ORM\Index(name="fk_id_tchat_id_tchat", columns={"ID_tchat"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\MessageRepository")
  */
 class Message
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="ID_message", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
-    private $idMessage;
+    private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="message_contenu", type="text", length=65535, nullable=false)
+     * @ORM\Column(type="date")
      */
-    private $messageContenu;
+    private $date_envoi;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="message_date_envoi", type="datetime", nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $messageDateEnvoi;
+    private $contenu;
 
     /**
-     * @var \Tchat
-     *
-     * @ORM\ManyToOne(targetEntity="Tchat")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_tchat", referencedColumnName="ID_tchat")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tchat", inversedBy="messages")
      */
-    private $idTchat;
+    private $tchat;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Utilisateur", mappedBy="idMessage")
+     * @ORM\OneToMany(targetEntity="App\Entity\Envoyer", mappedBy="message")
      */
-    private $idUtilisateur;
+    private $envoyers;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
-        $this->idUtilisateur = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->envoyers = new ArrayCollection();
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getDateEnvoi(): ?\DateTimeInterface
+    {
+        return $this->date_envoi;
+    }
+
+    public function setDateEnvoi(\DateTimeInterface $date_envoi): self
+    {
+        $this->date_envoi = $date_envoi;
+
+        return $this;
+    }
+
+    public function getContenu(): ?string
+    {
+        return $this->contenu;
+    }
+
+    public function setContenu(string $contenu): self
+    {
+        $this->contenu = $contenu;
+
+        return $this;
+    }
+
+    public function getTchat(): ?Tchat
+    {
+        return $this->tchat;
+    }
+
+    public function setTchat(?Tchat $tchat): self
+    {
+        $this->tchat = $tchat;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Envoyer[]
+     */
+    public function getEnvoyers(): Collection
+    {
+        return $this->envoyers;
+    }
+
+    public function addEnvoyer(Envoyer $envoyer): self
+    {
+        if (!$this->envoyers->contains($envoyer)) {
+            $this->envoyers[] = $envoyer;
+            $envoyer->setMessage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnvoyer(Envoyer $envoyer): self
+    {
+        if ($this->envoyers->contains($envoyer)) {
+            $this->envoyers->removeElement($envoyer);
+            // set the owning side to null (unless already changed)
+            if ($envoyer->getMessage() === $this) {
+                $envoyer->setMessage(null);
+            }
+        }
+
+        return $this;
+    }
 }
